@@ -18,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
 import javafx.stage.StageStyle;
+import fingerprint.system.ParserConcatenator;
 /**
  *
  * @author stephane.kibonge
@@ -27,7 +28,8 @@ public class UIController implements Initializable {
     
     
     @FXML
-    private void close(ActionEvent event) {
+    private void close(ActionEvent event) throws InterruptedException {
+        DBThread.q.put(ParserConcatenator.Concatenator(new String[] {"exit"}));
         System.exit(0);
     }
     

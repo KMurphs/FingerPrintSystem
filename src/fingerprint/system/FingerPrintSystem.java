@@ -5,12 +5,15 @@
  */
 package fingerprint.system;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import fingerprint.system.ParserConcatenator;
 
 /**
  *
@@ -32,8 +35,13 @@ public class FingerPrintSystem extends Application {
         stage.show();
         
         
-        DBThread DB = new DBThread( "Database Thread");
+        
+        DBThread DB = new DBThread( "Database Thread", "127.0.0.1", "tester", "tester321!", "jrfingerprintproject");
         DB.start();
+        
+        
+        //Thread.sleep(500);
+        //DBThread.q.put(ParserConcatenator.Concatenator(new String[] {"exit"}));
     }
 
     /**
@@ -44,3 +52,5 @@ public class FingerPrintSystem extends Application {
     }
     
 }
+
+
