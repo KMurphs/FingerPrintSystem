@@ -25,11 +25,15 @@ public class FingerPrintSystem extends Application {
         //Parent root = FXMLLoader.load(getClass().getResource("RegisterNewUser.fxml"));
         
         
-        Scene scene = new Scene(root, 600, 800);
+        Scene scene = new Scene(root);
         
         stage.setTitle("FingerPrint Server System");
         stage.setScene(scene);
         stage.show();
+        
+        
+        DBThread DB = new DBThread( "Database Thread");
+        DB.start();
     }
 
     /**
