@@ -5,10 +5,10 @@
  */
 package fingerprint.system;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.TimeUnit;
-import fingerprint.system.ParserConcatenator;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.io.*;
+import java.net.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -16,61 +16,68 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class ServerThread extends Thread {
     private Thread t;
-    private String threadName;
+    private final String threadName;
+    private final int serverPort;
+    private IDatabase dbOject;
    
-    private String serverPort;
-   
-    public static BlockingQueue<String> q;
-    public static BlockingQueue<String> getQ() {
-        return q;
-    }
-   
-    ServerThread(String thread_name, String port) {
+    
+    ServerThread(String thread_name, String port, IDatabase someDBbOject) {
         threadName = thread_name;
-        serverPort = port;
-        
-        q = new LinkedBlockingQueue<String>();
+        serverPort = Integer.parseInt(port);
+        dbOject = someDBbOject;
         
         System.out.println("Creating " +  threadName );
     }
    
+    
     public void run() {
         System.out.println("Running " +  threadName );
+        System.out.println(" Server is Running  " );
+
+        
         String cmd = "";
         String data = "";
         try {
-            while(!"exit".equals(cmd)){
-                //Dequeue msg, parse, and extract command and data (cmd, data)
-                String[] msg = ParserConcatenator.Parser(q.poll(10, TimeUnit.MILLISECONDS)); 
+            ServerSocket mysocket = new ServerSocket(serverPort);
+
+            while(!"exit".equals(cmd))
+            {
+                Socket connectionSocket = mysocket.accept();
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(connectionSocket.getOutputStream()));
+
+                writer.write("*** Welcome to the FingerPrint Server ***\r\n");            
+                writer.flush();
+                String[] msg = ParserConcatenator.Parser(reader.readLine().trim());
                 cmd = msg[0];
-                if(msg.length > 1){
+                if(msg.length == 1){
+                    data = "";
+                }else{
                     data = msg[1];
                 }
-                System.out.println(threadName + "Received Msg: " + cmd + "  -  " + data);
                 
-                //Handle msg cmd
-                switch(cmd){
-                    case "":
-                        break;
-                    case "exit":
-                        break;
-                    default:
-                        System.out.println(threadName + ": Unhandled Msg: " + cmd + "  -  " + data);
-                }
-                
+                String[] result = dbOject.processCmd(cmd, data);
+        
+                System.out.println(ParserConcatenator.Concatenator(result));
+                writer.write("\r\n" + ParserConcatenator.Concatenator(result));
+                writer.flush();
+                connectionSocket.close();
             }
-      } catch (InterruptedException e) {
-         System.out.println("Thread " +  threadName + " interrupted.");
-      }
-      System.out.println("Thread " +  threadName + " exiting.");
+        } catch (IOException ex) {
+            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("Thread " +  threadName + " exiting.");
     }
    
    
-   public void start () {
-      System.out.println("Starting " +  threadName );
-      if (t == null) {
-         t = new Thread (this, threadName);
-         t.start ();
-      }
-   }
+    public void start () {
+        System.out.println("Starting " +  threadName );
+        if (t == null) {
+            t = new Thread (this, threadName);
+            t.start ();
+        }
+    }
 }
+
+

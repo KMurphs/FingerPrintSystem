@@ -35,16 +35,11 @@ public class FingerPrintSystem extends Application {
         stage.show();
         
         
-        
-        DBThread DB = new DBThread( "Database Thread", "127.0.0.1", "tester", "tester321!", "jrfingerprintproject");
-        DB.start();
-        
-        ServerThread Server = new ServerThread( "Server Thread", "5555");
+        IDatabase dbObject = Factory.Create.getDBInterface("Database Thread", "127.0.0.1", "tester", "tester321!", "jrfingerprintproject");
+        ServerThread Server = new ServerThread( "Server Thread", "5555", dbObject);
         Server.start();
         
-        
-        //Thread.sleep(500);
-        //DBThread.q.put(ParserConcatenator.Concatenator(new String[] {"exit"}));
+        TCPClient.Client.Init("localhost", "5555");
     }
 
     /**

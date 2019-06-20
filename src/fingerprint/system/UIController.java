@@ -29,8 +29,8 @@ public class UIController implements Initializable {
     
     @FXML
     private void close(ActionEvent event) throws InterruptedException {
-        DBThread.q.put(ParserConcatenator.Concatenator(new String[] {"exit"}));
-        ServerThread.q.put(ParserConcatenator.Concatenator(new String[] {"exit"}));
+        //ServerThread.q.put());
+        TCPClient.Client.sendMsg(ParserConcatenator.Concatenator(new String[] {"exit"}));
         System.exit(0);
     }
     
