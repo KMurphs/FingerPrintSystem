@@ -9,6 +9,6 @@ package fingerprint.system;
  *
  * @author stephane.kibonge
  */
-public interface IProcessLog extends ILog, IObtainableLogs{
-   
+public interface ILog {
+     public void Log(String logitem);
 }

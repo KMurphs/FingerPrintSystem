@@ -5,10 +5,12 @@
  */
 package fingerprint.system;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author stephane.kibonge
  */
-public interface IProcessLog extends ILog, IObtainableLogs{
-   
+public interface IObtainableLogs {
+    public ArrayList<String> getLogs();
 }

@@ -52,8 +52,8 @@ public class ServerThread extends Thread {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(connectionSocket.getOutputStream()));
 
-                writer.write("*** Welcome to the FingerPrint Server ***\r\n");            
-                writer.flush();
+                //writer.write("*** Welcome to the FingerPrint Server ***\r\n");            
+                //writer.flush();
                 
                 String tcpmsg = reader.readLine().trim();
                 logObject.Log("Server Received: " + tcpmsg);

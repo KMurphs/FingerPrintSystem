@@ -28,6 +28,7 @@ import java.util.concurrent.BlockingQueue;
 public class UIController implements Initializable {
     
     private BlockingQueue<String> controllerQ;
+    private IObtainableLogs logObject;
     
     @FXML
     private void close(ActionEvent event) throws InterruptedException {
@@ -45,7 +46,7 @@ public class UIController implements Initializable {
             
             Parent root = (Parent)fxmlLoader.load();          
             RunUIController controller = fxmlLoader.<RunUIController>getController();
-            controller.getObjects(controllerQ);
+            controller.getObjects(controllerQ, logObject);
             Scene scene = new Scene(root);
             
             //Scene scene = new Scene(fxmlLoader.load());
@@ -113,7 +114,8 @@ public class UIController implements Initializable {
         // TODO
     }    
     
-    public void getObjects(BlockingQueue<String> someControllerQ){
+    public void getObjects(BlockingQueue<String> someControllerQ, IObtainableLogs someLogObject){
         controllerQ = someControllerQ;
+        logObject = someLogObject;
     }
 }

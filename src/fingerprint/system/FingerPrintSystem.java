@@ -38,13 +38,12 @@ public class FingerPrintSystem extends Application {
         //TCPClient.Client.sendMsg(ParserConcatenator.Concatenator(new String[] {"check", ""}));
         //TCPClient.Client.sendMsg(ParserConcatenator.Concatenator(new String[] {"check", "TestFingerPrint"}));
         //TCPClient.Client.sendMsg(ParserConcatenator.Concatenator(new String[] {"insert", ParserConcatenator.Concatenator(new String[] {"myName", "mySurname", "myFingerPrint", "myIDNumber"}, ";")}));
-        //q.poll(100, TimeUnit.MILLISECONDS)
         
         
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("UI.fxml"));     
         Parent root = (Parent)fxmlLoader.load();          
         UIController uiController = fxmlLoader.<UIController>getController();
-        uiController.getObjects(controllerQ);
+        uiController.getObjects(controllerQ, logObject);
         //Parent root = FXMLLoader.load(getClass().getResource("UI.fxml"));
         //Parent root = FXMLLoader.load(getClass().getResource("Register.fxml"));
         //Parent root = FXMLLoader.load(getClass().getResource("RegisterNewUser.fxml"));
