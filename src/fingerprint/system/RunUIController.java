@@ -7,6 +7,7 @@ package fingerprint.system;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.BlockingQueue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,7 +21,7 @@ import javafx.stage.Stage;
 public class RunUIController implements Initializable {
     
     @FXML private javafx.scene.control.Button btnReturn;
-    
+    private BlockingQueue<String> controllerQ;
     /**
      * Initializes the controller class.
      */
@@ -35,5 +36,9 @@ public class RunUIController implements Initializable {
         Stage stage = (Stage) btnReturn.getScene().getWindow();
         // do what you have to do
         stage.close();
+    }
+    
+    public void getObjects(BlockingQueue<String> someControllerQ){
+        controllerQ = someControllerQ;
     }
 }

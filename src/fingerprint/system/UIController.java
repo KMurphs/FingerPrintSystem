@@ -5,6 +5,7 @@
  */
 package fingerprint.system;
 
+import static fingerprint.system.FingerPrintSystem.controllerQ;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -19,13 +20,14 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import javafx.stage.StageStyle;
 import fingerprint.system.ParserConcatenator;
+import java.util.concurrent.BlockingQueue;
 /**
  *
  * @author stephane.kibonge
  */
 public class UIController implements Initializable {
     
-    
+    private BlockingQueue<String> controllerQ;
     
     @FXML
     private void close(ActionEvent event) throws InterruptedException {
@@ -40,11 +42,13 @@ public class UIController implements Initializable {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("RunUI.fxml"));
-            /* 
-             * if "fx:controller" is not set in fxml
-             * fxmlLoader.setController(NewWindowController);
-             */
-            Scene scene = new Scene(fxmlLoader.load());
+            
+            Parent root = (Parent)fxmlLoader.load();          
+            RunUIController controller = fxmlLoader.<RunUIController>getController();
+            controller.getObjects(controllerQ);
+            Scene scene = new Scene(root);
+            
+            //Scene scene = new Scene(fxmlLoader.load());
             Stage stage = new Stage();
             stage.initStyle(StageStyle.UNDECORATED);
             
@@ -63,11 +67,13 @@ public class UIController implements Initializable {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("RegisterNewUser.fxml"));
-            /* 
-             * if "fx:controller" is not set in fxml
-             * fxmlLoader.setController(NewWindowController);
-             */
-            Scene scene = new Scene(fxmlLoader.load());
+            
+            Parent root = (Parent)fxmlLoader.load();          
+            RegisterNewUserController controller = fxmlLoader.<RegisterNewUserController>getController();
+            controller.getObjects(controllerQ);
+            Scene scene = new Scene(root);
+            
+            //Scene scene = new Scene(fxmlLoader.load());
             Stage stage = new Stage();
             stage.initStyle(StageStyle.UNDECORATED);
             
@@ -87,10 +93,7 @@ public class UIController implements Initializable {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("Settings.fxml"));
-            /* 
-             * if "fx:controller" is not set in fxml
-             * fxmlLoader.setController(NewWindowController);
-             */
+  
             Scene scene = new Scene(fxmlLoader.load());
             Stage stage = new Stage();
             stage.initStyle(StageStyle.UNDECORATED);
@@ -110,4 +113,7 @@ public class UIController implements Initializable {
         // TODO
     }    
     
+    public void getObjects(BlockingQueue<String> someControllerQ){
+        controllerQ = someControllerQ;
+    }
 }

@@ -20,26 +20,42 @@ import fingerprint.system.ParserConcatenator;
  * @author stephane.kibonge
  */
 public class FingerPrintSystem extends Application {
-    
+    public static BlockingQueue<String> controllerQ;
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("UI.fxml"));
+        
+        //Objects Creation
+        controllerQ = Factory.Create.getQ();
+        IDatabase dbObject = Factory.Create.getDBInterface("Database Thread", "127.0.0.1", "tester", "tester321!", "jrfingerprintproject");
+        IProcessLog logObject = Factory.Create.getProcessLogger("");
+        ServerThread Server = new ServerThread( "Server Thread", "5555", dbObject, logObject, controllerQ);
+        Server.start();
+        
+        //Initialize TCP Client for further use, example on how to use tcp client to talk to the server
+        TCPClient.Client.Init("localhost", "5555", logObject);
+        //TCPClient.Client.sendMsg(ParserConcatenator.Concatenator(new String[] {"exit"}));
+        //TCPClient.Client.sendMsg(ParserConcatenator.Concatenator(new String[] {"getAll"}));
+        //TCPClient.Client.sendMsg(ParserConcatenator.Concatenator(new String[] {"check", ""}));
+        //TCPClient.Client.sendMsg(ParserConcatenator.Concatenator(new String[] {"check", "TestFingerPrint"}));
+        //TCPClient.Client.sendMsg(ParserConcatenator.Concatenator(new String[] {"insert", ParserConcatenator.Concatenator(new String[] {"myName", "mySurname", "myFingerPrint", "myIDNumber"}, ";")}));
+        //q.poll(100, TimeUnit.MILLISECONDS)
+        
+        
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("UI.fxml"));     
+        Parent root = (Parent)fxmlLoader.load();          
+        UIController uiController = fxmlLoader.<UIController>getController();
+        uiController.getObjects(controllerQ);
+        //Parent root = FXMLLoader.load(getClass().getResource("UI.fxml"));
         //Parent root = FXMLLoader.load(getClass().getResource("Register.fxml"));
         //Parent root = FXMLLoader.load(getClass().getResource("RegisterNewUser.fxml"));
         
-        
-        Scene scene = new Scene(root);
-        
+    
+        Scene scene = new Scene(root);     
         stage.setTitle("FingerPrint Server System");
         stage.setScene(scene);
         stage.show();
         
-        
-        IDatabase dbObject = Factory.Create.getDBInterface("Database Thread", "127.0.0.1", "tester", "tester321!", "jrfingerprintproject");
-        ServerThread Server = new ServerThread( "Server Thread", "5555", dbObject);
-        Server.start();
-        
-        TCPClient.Client.Init("localhost", "5555");
+
     }
 
     /**

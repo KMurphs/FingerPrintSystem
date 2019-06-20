@@ -8,12 +8,14 @@ package fingerprint.system;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.BlockingQueue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -27,7 +29,7 @@ public class RegisterNewUserController implements Initializable {
     
     @FXML private javafx.scene.control.Button btnReturn;
     @FXML private javafx.scene.control.ChoiceBox userRole;
-    
+    private BlockingQueue<String> controllerQ;
     ObservableList<String> personRoles = FXCollections.observableArrayList("Student", "Lecturer");
     
     /**
@@ -55,12 +57,13 @@ public class RegisterNewUserController implements Initializable {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("ObtainFingerprint.fxml"));
-            /* 
-             * if "fx:controller" is not set in fxml
-             * fxmlLoader.setController(NewWindowController);
-             */
+                        
+            Parent root = (Parent)fxmlLoader.load();          
+            ObtainFingerprintController controller = fxmlLoader.<ObtainFingerprintController>getController();
+            controller.getObjects(controllerQ);
+            Scene scene = new Scene(root);
             
-            Scene scene = new Scene(fxmlLoader.load());
+            //Scene scene = new Scene(fxmlLoader.load());
             Stage stage = new Stage();
             stage.initStyle(StageStyle.UNDECORATED);
             
@@ -72,5 +75,10 @@ public class RegisterNewUserController implements Initializable {
             e.printStackTrace();
         }
         
-    }   
+    }
+    
+    
+    public void getObjects(BlockingQueue<String> someControllerQ){
+        controllerQ = someControllerQ;
+    }
 }

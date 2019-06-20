@@ -20,10 +20,13 @@ public class TCPClient {
     public static class Client{
         private static String serverIPAddress;
         private static int serverPort;
+        private static IProcessLog logObject;
+        
 
-        public static void Init(String ip, String port){
+        public static void Init(String ip, String port, IProcessLog someProcessLogObject){
             serverIPAddress = ip;
             serverPort = Integer.parseInt(port);
+            logObject = someProcessLogObject;
         }
 
         public static String sendMsg(String msg){
@@ -31,7 +34,8 @@ public class TCPClient {
 
             try{
                 Socket socketClient= new Socket(serverIPAddress, serverPort);
-                System.out.println("Client: " + "Connection Established");
+                logObject.Log("Client Connection Established");
+                logObject.Log("Client Sending Message: " + msg);
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(socketClient.getInputStream()));
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socketClient.getOutputStream()));
@@ -39,7 +43,9 @@ public class TCPClient {
                 writer.write(msg + "\r\n");
                 writer.flush();
                 while((serverMsg = reader.readLine()) != null){
-                   System.out.println("Client: " + serverMsg);
+                    if(!"".equals(serverMsg)){
+                        logObject.Log("Client: Received Response: " + serverMsg);
+                    } 
                 }
 
             }catch(IOException e){

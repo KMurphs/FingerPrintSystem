@@ -5,6 +5,9 @@
  */
 package fingerprint.system;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 
 /**
  *
@@ -12,8 +15,18 @@ package fingerprint.system;
  */
 public class Factory {
     public static class Create{
+        
         public static IDatabase getDBInterface(String thread_name, String ipAddress, String userName, String password, String name){
-            return new mysqlInterface(thread_name, ipAddress, userName, password, name);
-        }        
+            return new MYSQLModule(thread_name, ipAddress, userName, password, name);
+        } 
+        
+        public static IProcessLog getProcessLogger(String logfilepath){
+            return new ProcessLogger();
+        }
+        
+        public static BlockingQueue<String> getQ(){
+            return new LinkedBlockingQueue<String>();
+        }
+        
     }
 }
