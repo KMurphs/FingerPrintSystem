@@ -54,7 +54,7 @@ public class FingerPrintSystem extends Application {
         stage.setScene(scene);
         stage.show();
         
-
+        //Config.Files.writeConfig();
     }
 
     /**
