@@ -33,7 +33,7 @@ public class FingerPrintSystem extends Application {
         
         //Objects Creation
         controllerQ = Factory.Create.getQ();
-        IDatabase dbObject = Factory.Create.getDBInterface("Database Thread", (String)configData.get("dbIPAddress"), (String)configData.get("dbuser"), (String)configData.get("dbpassword"), (String)configData.get("dbName"));
+        IDatabase dbObject = Factory.Create.getDBInterface("Database Thread", (String)configData.get("dbIPAddress"), (String)configData.get("dbUser"), (String)configData.get("dbPassword"), (String)configData.get("dbName"));
         IProcessLog logObject = Factory.Create.getProcessLogger("");
         ServerThread Server = new ServerThread( "Server Thread", "5555", dbObject, logObject, controllerQ);
         Server.start();
