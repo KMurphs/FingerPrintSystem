@@ -14,6 +14,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import fingerprint.system.ParserConcatenator;
+import java.nio.file.Paths;
+import java.util.Dictionary;
+
 
 /**
  *
@@ -23,10 +26,14 @@ public class FingerPrintSystem extends Application {
     public static BlockingQueue<String> controllerQ;
     @Override
     public void start(Stage stage) throws Exception {
+        //Reading Configuration File
+        Dictionary folders = ProjectFoldersContainer.ProjectFolders.makeProjectFolders_byName("FingerPrint System");
+        String configFilePath = Paths.get((String)folders.get("config"), "config.properties").toString();
+        Dictionary configData = ConfigFilesContainer.ConfigFiles.readFile(configFilePath);
         
         //Objects Creation
         controllerQ = Factory.Create.getQ();
-        IDatabase dbObject = Factory.Create.getDBInterface("Database Thread", "127.0.0.1", "tester", "tester321!", "jrfingerprintproject");
+        IDatabase dbObject = Factory.Create.getDBInterface("Database Thread", (String)configData.get("dbIPAddress"), (String)configData.get("dbuser"), (String)configData.get("dbpassword"), (String)configData.get("dbName"));
         IProcessLog logObject = Factory.Create.getProcessLogger("");
         ServerThread Server = new ServerThread( "Server Thread", "5555", dbObject, logObject, controllerQ);
         Server.start();
